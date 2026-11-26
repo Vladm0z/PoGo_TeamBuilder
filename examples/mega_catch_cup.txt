@@ -1,0 +1,205 @@
+evolutions considered:
+  lucario -> Lucario, Lucario (Mega)
+  falinks -> Falinks, Falinks (Mega)
+  machamp -> Machop, Machoke, Machamp
+  raichu -> Raichu, Raichu (Mega X), Raichu (Mega Y), Raichu (Alolan)
+  flygon -> Trapinch, Vibrava, Flygon
+  bisharp -> Pawniard, Bisharp, Kingambit
+  hitmonlee -> Hitmonlee, Hitmonchan, Hitmontop
+  eevee -> Eevee, Vaporeon, Jolteon, Flareon, Espeon, Umbreon, Leafeon, Glaceon, Sylveon
+  jigglypuff -> Wigglytuff
+  magneton -> Magnemite, Magneton, Magnezone
+  elekid -> Elekid, Electabuzz, Electivire
+  rattata -> Raticate, Raticate (Alolan)
+  krabby -> Krabby, Kingler
+[engine] simulating 4160 matchups with PvPoke's engine
+
+=== Great League / mega (CP 1500) ===
+pool: 41 Pokemon | scorecard: 25 meta threats | elo unset -> scorecard 25
+matchups: pvpoke (4288/4290 pairs pairs cached/simulated)
+[i] Catch Cup legality depends on when you caught each Pokemon (this season only) — that is assumed, not checked.
+
+--- Step 1-3: greedy build (the post's manual loop) ---
+  B   coverage 371.1/1000 (PvPoke-style: 1000 - threat avg vs your 6 worst) | best-answer avg 660.6 | scorecard   80% answered | unanswerable 20%
+  team : Umbreon / Machamp / Magnemite
+  order: Umbreon (lead) -> Machamp (safe swap) -> Magnemite (closer)
+  roles: lead 83 | switch 70 | closer 60   (PvPoke Lead/Switch/Closer scores)
+  build:
+    lead   Umbreon — Dark · atk 90.2 / def 177.0 / hp 156 · Snarl + Dark Pulse + Last Resort
+    switch Machamp — Fighting · atk 135.4 / def 98.6 / hp 124 · Karate Chop + Cross Chop + Rock Slide
+    closer Magnemite — Electric/Steel · atk 147.8 / def 113.6 / hp 90 · Volt Switch + Magnet Bomb + Discharge
+  corebreakers (nobody wins): Altaria (438), Rillaboom (457), Tinkaton (471), Clodsire (471), Araquanid (496)
+  only one answer          : Marowak (520), Ninetales (Shadow) (568), Stunfisk (596), Mimikyu (Busted) (615), Sableye (Mega) (621), Sableye (Shadow) (661)
+  coverage set (what the grade is based on — threat's avg rating vs your team):
+    Clodsire                   threat-side   679   your best answer  471   answers 0/3
+    Mimikyu (Busted)           threat-side   648   your best answer  615   answers 1/3
+    Marowak                    threat-side   646   your best answer  520   answers 1/3
+    Ninetales (Shadow)         threat-side   604   your best answer  568   answers 1/3
+    Araquanid                  threat-side   600   your best answer  496   answers 0/3
+    Tinkaton                   threat-side   596   your best answer  471   answers 0/3
+  hardest meta threats     : Altaria (438), Rillaboom (457), Tinkaton (471), Clodsire (471)
+  answers per member       : Umbreon 9/25, Machamp 11/25, Magnemite 9/25
+
+--- Best 5 of 10434 legal combinations ---
+    ranked by PvPoke's coverage metric, then by scorecard pass rate:
+
+    #   coverage  answers  grade  team  (lead / swap / closer)
+    1        385      96%      B  Raichu / Wigglytuff / Vaporeon
+    2        383      92%      B  Raichu / Wigglytuff / Flygon
+    3        379      88%      B  Umbreon / Raichu / Wigglytuff
+    4        375      96%      B  Wigglytuff / Raichu (Alolan) / Vaporeon
+    5        374      80%      B  Umbreon / Magnezone / Vibrava
+
+#1
+  B   coverage 384.6/1000 (PvPoke-style: 1000 - threat avg vs your 6 worst) | best-answer avg 666.5 | scorecard   96% answered | unanswerable 4%
+  team : Raichu / Vaporeon / Wigglytuff
+  order: Raichu (lead) -> Wigglytuff (safe swap) -> Vaporeon (closer)
+  roles: lead 82 | switch 59 | closer 67   (PvPoke Lead/Switch/Closer scores)
+  build:
+    lead   Raichu — Electric · atk 133.5 / def 110.6 / hp 114 · Volt Switch + Volt Tackle + Trailblaze
+    switch Wigglytuff — Normal/Fairy · atk 115.1 / def 75.5 / hp 223 · Charm + Icy Wind + Swift
+    closer Vaporeon — Water · atk 118.4 / def 96.9 / hp 165 · Water Gun + Aqua Tail + Last Resort
+  corebreakers (nobody wins): Rillaboom (329)
+  only one answer          : Araquanid (508), Clodsire (512), Corviknight (513), Mimikyu (Busted) (616), Carbink (669), Corsola (Galarian) (708)
+  coverage set (what the grade is based on — threat's avg rating vs your team):
+    Rillaboom                  threat-side   745   your best answer  329   answers 0/3
+    Clodsire                   threat-side   610   your best answer  512   answers 1/3
+    Mimikyu (Busted)           threat-side   598   your best answer  616   answers 1/3
+    Araquanid                  threat-side   596   your best answer  508   answers 1/3
+    Ninetales (Shadow)         threat-side   574   your best answer  543   answers 2/3
+    Corviknight                threat-side   571   your best answer  513   answers 1/3
+  hardest meta threats     : Rillaboom (329), Araquanid (508), Clodsire (512), Corviknight (513)
+  answers per member       : Raichu 15/25, Vaporeon 13/25, Wigglytuff 15/25
+
+#2
+  B   coverage 383.3/1000 (PvPoke-style: 1000 - threat avg vs your 6 worst) | best-answer avg 672.6 | scorecard   92% answered | unanswerable 8%
+  team : Raichu / Flygon / Wigglytuff
+  order: Raichu (lead) -> Wigglytuff (safe swap) -> Flygon (closer)
+  roles: lead 82 | switch 59 | closer 67   (PvPoke Lead/Switch/Closer scores)
+  build:
+    lead   Raichu — Electric · atk 133.5 / def 110.6 / hp 114 · Volt Switch + Volt Tackle + Trailblaze
+    switch Wigglytuff — Normal/Fairy · atk 115.1 / def 75.5 / hp 223 · Charm + Icy Wind + Swift
+    closer Flygon — Ground/Dragon · atk 127.9 / def 109.5 / hp 125 · Dragon Tail + Sand Tomb + Twister
+  corebreakers (nobody wins): Rillaboom (422), Carbink (484)
+  only one answer          : Araquanid (508), Corviknight (513), Clodsire (524), Marowak (594), Mimikyu (Busted) (616), Florges (652)
+  coverage set (what the grade is based on — threat's avg rating vs your team):
+    Rillaboom                  threat-side   662   your best answer  422   answers 0/3
+    Mimikyu (Busted)           threat-side   640   your best answer  616   answers 1/3
+    Florges                    threat-side   623   your best answer  652   answers 1/3
+    Clodsire                   threat-side   606   your best answer  524   answers 1/3
+    Tinkaton                   threat-side   585   your best answer  815   answers 1/3
+    Corviknight                threat-side   584   your best answer  513   answers 1/3
+  hardest meta threats     : Rillaboom (422), Carbink (484), Araquanid (508), Corviknight (513)
+  answers per member       : Raichu 15/25, Flygon 9/25, Wigglytuff 15/25
+
+#3
+  B   coverage 379.3/1000 (PvPoke-style: 1000 - threat avg vs your 6 worst) | best-answer avg 668.2 | scorecard   88% answered | unanswerable 12%
+  team : Raichu / Umbreon / Wigglytuff
+  order: Umbreon (lead) -> Raichu (safe swap) -> Wigglytuff (closer)
+  roles: lead 83 | switch 70 | closer 75   (PvPoke Lead/Switch/Closer scores)
+  build:
+    lead   Umbreon — Dark · atk 90.2 / def 177.0 / hp 156 · Snarl + Dark Pulse + Last Resort
+    switch Raichu — Electric · atk 133.5 / def 110.6 / hp 114 · Volt Switch + Volt Tackle + Trailblaze
+    closer Wigglytuff — Normal/Fairy · atk 115.1 / def 75.5 / hp 223 · Charm + Icy Wind + Swift
+  corebreakers (nobody wins): Rillaboom (418), Clodsire (471), Carbink (484)
+  only one answer          : Araquanid (508), Ninetales (Shadow) (543), Marowak (594), Florges (652), Melmetal (732), Tinkaton (815)
+  coverage set (what the grade is based on — threat's avg rating vs your team):
+    Rillaboom                  threat-side   664   your best answer  418   answers 0/3
+    Ninetales (Shadow)         threat-side   628   your best answer  543   answers 1/3
+    Clodsire                   threat-side   624   your best answer  471   answers 0/3
+    Carbink                    threat-side   613   your best answer  484   answers 0/3
+    Florges                    threat-side   608   your best answer  652   answers 1/3
+    Tinkaton                   threat-side   588   your best answer  815   answers 1/3
+  hardest meta threats     : Rillaboom (418), Clodsire (471), Carbink (484), Araquanid (508)
+  answers per member       : Raichu 15/25, Umbreon 9/25, Wigglytuff 15/25
+
+#4
+  B   coverage 375.1/1000 (PvPoke-style: 1000 - threat avg vs your 6 worst) | best-answer avg 671.2 | scorecard   96% answered | unanswerable 4%
+  team : Raichu (Alolan) / Vaporeon / Wigglytuff
+  order: Wigglytuff (lead) -> Raichu (Alolan) (safe swap) -> Vaporeon (closer)
+  roles: lead 82 | switch 76 | closer 67   (PvPoke Lead/Switch/Closer scores)
+  build:
+    lead   Wigglytuff — Normal/Fairy · atk 115.1 / def 75.5 / hp 223 · Charm + Icy Wind + Swift
+    switch Raichu (Alolan) — Electric/Psychic · atk 135.4 / def 109.9 / hp 111 · Volt Switch + Volt Tackle + Psyshock
+    closer Vaporeon — Water · atk 118.4 / def 96.9 / hp 165 · Water Gun + Aqua Tail + Last Resort
+  corebreakers (nobody wins): Rillaboom (329)
+  only one answer          : Dunsparce (509), Clodsire (512), Tinkaton (587), Mimikyu (Busted) (616), Araquanid (617), Umbreon (654)
+  coverage set (what the grade is based on — threat's avg rating vs your team):
+    Rillaboom                  threat-side   784   your best answer  329   answers 0/3
+    Mimikyu (Busted)           threat-side   618   your best answer  616   answers 1/3
+    Clodsire                   threat-side   618   your best answer  512   answers 1/3
+    Tinkaton                   threat-side   596   your best answer  587   answers 1/3
+    Ninetales (Shadow)         threat-side   575   your best answer  540   answers 2/3
+    Araquanid                  threat-side   559   your best answer  617   answers 1/3
+  hardest meta threats     : Rillaboom (329), Dunsparce (509), Clodsire (512), Ninetales (Shadow) (540)
+  answers per member       : Raichu (Alolan) 9/25, Vaporeon 13/25, Wigglytuff 15/25
+
+#5
+  B   coverage 374.1/1000 (PvPoke-style: 1000 - threat avg vs your 6 worst) | best-answer avg 636.0 | scorecard   80% answered | unanswerable 20%
+  team : Vibrava / Umbreon / Magnezone
+  order: Umbreon (lead) -> Magnezone (safe swap) -> Vibrava (closer)
+  roles: lead 83 | switch 66 | closer 57   (PvPoke Lead/Switch/Closer scores)
+  build:
+    lead   Umbreon — Dark · atk 90.2 / def 177.0 / hp 156 · Snarl + Dark Pulse + Last Resort
+    switch Magnezone — Electric/Steel · atk 134.3 / def 121.1 / hp 102 · Volt Switch + Wild Charge + Magnet Bomb
+    closer Vibrava — Ground/Dragon · atk 125.2 / def 95.7 / hp 127 · Dragon Breath + Sand Tomb + Bulldoze
+  corebreakers (nobody wins): Rillaboom (418), Clodsire (471), Altaria (474), Marowak (476), Sableye (Shadow) (496)
+  only one answer          : Hydreigon (Shadow) (524), Ninetales (Shadow) (570), Araquanid (588), Umbreon (602), Dunsparce (605), Mimikyu (Busted) (615)
+  coverage set (what the grade is based on — threat's avg rating vs your team):
+    Marowak                    threat-side   696   your best answer  476   answers 0/3
+    Mimikyu (Busted)           threat-side   624   your best answer  615   answers 1/3
+    Ninetales (Shadow)         threat-side   614   your best answer  570   answers 1/3
+    Clodsire                   threat-side   611   your best answer  471   answers 0/3
+    Sableye (Shadow)           threat-side   608   your best answer  496   answers 0/3
+    Melmetal                   threat-side   603   your best answer  681   answers 1/3
+  hardest meta threats     : Rillaboom (418), Clodsire (471), Altaria (474), Marowak (476)
+  answers per member       : Vibrava 5/25, Umbreon 9/25, Magnezone 12/25
+
+--- evolution pool used ---
+  #22   Umbreon                    dark             Snarl, Dark Pulse, Last Resort
+  #95   Wigglytuff                 normal/fairy     Charm, Icy Wind, Swift
+  #156  Sylveon                    fairy            Fairy Wind, Psyshock, Draining Kiss
+  #164  Raichu                     electric         Volt Switch, Volt Tackle, Trailblaze
+  #183  Raichu (Mega X)            electric         Volt Switch, Brick Break, Trailblaze, Volt Tackle Plus
+  #233  Machamp                    fighting         Karate Chop, Cross Chop, Rock Slide
+  #248  Raichu (Alolan)            electric/psychic Volt Switch, Volt Tackle, Psyshock
+  #260  Kingambit                  dark/steel       Low Kick, Kowtow Cleave, Iron Head
+  #263  Toxtricity                 electric/poison  Acid, Wild Charge, Swift
+  #278  Magnezone                  electric/steel   Volt Switch, Wild Charge, Magnet Bomb
+  #346  Raichu (Mega Y)            electric         Thunder Shock, Brick Break, Trailblaze, Zap Cannon Plus
+  #365  Raticate (Alolan)          dark/normal      Bite, Crunch, Return
+  #414  Pawniard                   dark/steel       Scratch, Night Slash, Iron Head
+  #468  Electivire                 electric         Thunder Shock, Ice Punch, Wild Charge
+  #469  Flygon                     ground/dragon    Dragon Tail, Sand Tomb, Twister
+  #492  Magneton                   electric/steel   Volt Switch, Magnet Bomb, Discharge
+  #504  Lucario                    fighting/steel   Force Palm, Aura Sphere, Shadow Ball
+  #513  Hitmonlee                  fighting         Low Kick, Blaze Kick, Brick Break
+  #523  Magnemite                  electric/steel   Volt Switch, Magnet Bomb, Discharge
+  #532  Machoke                    fighting         Karate Chop, Cross Chop, Return
+  #542  Machop                     fighting         Karate Chop, Cross Chop, Brick Break
+  #579  Vaporeon                   water            Water Gun, Aqua Tail, Last Resort
+  #611  Lucario (Mega)             fighting/steel   Force Palm, Aura Sphere, Shadow Ball
+  #626  Electabuzz                 electric         Thunder Shock, Thunder Punch, Return
+  #635  Hitmontop                  fighting         Counter, Close Combat, Triple Axel
+  #670  Falinks (Mega)             fighting         Counter, Super Power, Megahorn, Brick Break Plus
+  #716  Vibrava                    ground/dragon    Dragon Breath, Sand Tomb, Bulldoze
+  #767  Flareon                    fire             Ember, Heat Wave, Super Power
+  #773  Elekid                     electric         Thunder Shock, Thunder Punch, Brick Break
+  #831  Leafeon                    grass            Quick Attack, Leaf Blade, Energy Ball
+  #851  Hitmonchan                 fighting         Counter, Ice Punch, Thunder Punch
+  #871  Jolteon                    electric         Thunder Shock, Discharge, Last Resort
+  #882  Bisharp                    dark/steel       Snarl, Dark Pulse, Iron Head
+  #938  Espeon                     psychic          Confusion, Psychic Fangs, Shadow Ball
+  #961  Falinks                    fighting         Counter, Super Power, Megahorn
+  #1034 Trapinch                   ground           Sand Attack, Sand Tomb, Crunch
+  #1102 Raticate                   normal           Quick Attack, Hyper Fang, Dig
+  #1108 Eevee                      normal           Quick Attack, Swift, Dig
+  #1114 Kingler                    water            Bubble, Crabhammer, Vice Grip
+  #1137 Krabby                     water            Bubble, Vice Grip, Razor Shell
+  #1156 Glaceon                    ice              Ice Shard, Avalanche, Water Pulse
+
+[wrote examples/mega_catch_cup.html]  open it in a browser for the full scorecards
+
+[wrote /tmp/mcc.json]
+
+Open in PvPoke: https://pvpoke.com/team-builder/mega/1500/raichu,vaporeon,wigglytuff/

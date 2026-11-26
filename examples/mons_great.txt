@@ -1,0 +1,32 @@
+# A deliberately realistic "what a returning player owns" Great League box.
+# One per line, or comma separated. Comments with # are ignored.
+Azumarill
+Skarmory
+Clodsire
+Lanturn
+Dunsparce
+Vigoroth
+Altaria
+Umbreon
+Sableye
+Talonflame
+Swampert
+Medicham
+Registeel
+Carbink
+Serperior
+Drapion
+Gastrodon
+Mandibuzz
+Cresselia
+Wobbuffet
+Marowak (Shadow)
+Ninetales (Shadow)
+Quagsire (Shadow)
+Weezing (Galarian)
+Corviknight
+Tinkaton
+Annihilape
+Pelipper
+Mantine
+Politoed
