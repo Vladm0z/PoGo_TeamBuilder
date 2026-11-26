@@ -44,11 +44,14 @@ estimates. Those are fast and rough; treat them as a sanity check, not a ranking
 ## Install
 
 ```bash
-git clone https://github.com/USER/pvp-team-builder
+git clone https://github.com/USER/pvp-team-builder   # replace USER with your account
 cd pvp-team-builder
 python -m venv .venv && . .venv/bin/activate
 pip install -e .
 ```
+
+To create the remote repository from this checkout, `./scripts/publish.sh`
+(needs the GitHub CLI) sets the description, topics and remote, then pushes.
 
 ## Usage
 
