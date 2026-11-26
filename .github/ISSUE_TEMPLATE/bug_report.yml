@@ -1,0 +1,34 @@
+name: Bug report
+description: A result disagrees with pvpoke.com, or something crashes
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. The `validate` output below settles most
+        questions about scoring, so please run it first.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: The command you ran, the output you got, and what you expected.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: team
+    attributes:
+      label: Team, cup and settings
+      placeholder: "great / mega catch cup, Raichu + Wigglytuff + Vaporeon, 1 shield each"
+  - type: textarea
+    id: validate
+    attributes:
+      label: Output of `pvp-team-builder validate -l great -l ultra --n 40`
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Python and Node versions
+      placeholder: "Python 3.12.3, Node 20.11.1"
