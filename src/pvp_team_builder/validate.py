@@ -1,15 +1,13 @@
 """
-Self-check: does this tool actually reproduce PvPoke?
+Checks the simulator against PvPoke.
 
-PvPoke's rankings publish, for each Pokemon, the ratings of its best 5 and
-worst 5 matchups -- those are real simulation results from their engine.
-This script re-simulates every one of those pairs through our Node bridge and
-compares. If the bridge is wired correctly the difference is exactly 0.
+Re-simulates every matchup PvPoke published in its rankings -- each Pokemon's
+five best and five worst results -- and diffs them. A correctly wired bridge
+gives zero error.
 
-    python -m pvp_team_builder.validate            # great + ultra, top 40 mons
-    python -m pvp_team_builder.validate -l great --n 60
+    pvp-team-builder validate -l great -l ultra --n 40
 
-Exit code 0 = all match, 1 = mismatch (details printed).
+Exit code 0 means every matchup matched.
 """
 
 from __future__ import annotations

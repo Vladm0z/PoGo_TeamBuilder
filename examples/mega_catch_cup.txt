@@ -17,7 +17,7 @@ evolutions considered:
 === Great League / mega (CP 1500) ===
 pool: 41 Pokemon | scorecard: 25 meta threats | elo unset -> scorecard 25
 matchups: pvpoke (4288/4290 pairs pairs cached/simulated)
-[i] Catch Cup legality depends on when you caught each Pokemon (this season only) — that is assumed, not checked.
+[i] Catch Cup legality depends on when you caught each Pokemon (this season only): assumed, not checked.
 
 --- Step 1-3: greedy build (the post's manual loop) ---
   B   coverage 371.1/1000 (PvPoke-style: 1000 - threat avg vs your 6 worst) | best-answer avg 660.6 | scorecard   80% answered | unanswerable 20%
@@ -25,12 +25,12 @@ matchups: pvpoke (4288/4290 pairs pairs cached/simulated)
   order: Umbreon (lead) -> Machamp (safe swap) -> Magnemite (closer)
   roles: lead 83 | switch 70 | closer 60   (PvPoke Lead/Switch/Closer scores)
   build:
-    lead   Umbreon — Dark · atk 90.2 / def 177.0 / hp 156 · Snarl + Dark Pulse + Last Resort
-    switch Machamp — Fighting · atk 135.4 / def 98.6 / hp 124 · Karate Chop + Cross Chop + Rock Slide
-    closer Magnemite — Electric/Steel · atk 147.8 / def 113.6 / hp 90 · Volt Switch + Magnet Bomb + Discharge
+    lead   Umbreon - Dark - atk 90.2 / def 177.0 / hp 156 - Snarl + Dark Pulse + Last Resort
+    switch Machamp - Fighting - atk 135.4 / def 98.6 / hp 124 - Karate Chop + Cross Chop + Rock Slide
+    closer Magnemite - Electric/Steel - atk 147.8 / def 113.6 / hp 90 - Volt Switch + Magnet Bomb + Discharge
   corebreakers (nobody wins): Altaria (438), Rillaboom (457), Tinkaton (471), Clodsire (471), Araquanid (496)
   only one answer          : Marowak (520), Ninetales (Shadow) (568), Stunfisk (596), Mimikyu (Busted) (615), Sableye (Mega) (621), Sableye (Shadow) (661)
-  coverage set (what the grade is based on — threat's avg rating vs your team):
+  coverage set (threat's average rating against your team):
     Clodsire                   threat-side   679   your best answer  471   answers 0/3
     Mimikyu (Busted)           threat-side   648   your best answer  615   answers 1/3
     Marowak                    threat-side   646   your best answer  520   answers 1/3
@@ -56,12 +56,12 @@ matchups: pvpoke (4288/4290 pairs pairs cached/simulated)
   order: Raichu (lead) -> Wigglytuff (safe swap) -> Vaporeon (closer)
   roles: lead 82 | switch 59 | closer 67   (PvPoke Lead/Switch/Closer scores)
   build:
-    lead   Raichu — Electric · atk 133.5 / def 110.6 / hp 114 · Volt Switch + Volt Tackle + Trailblaze
-    switch Wigglytuff — Normal/Fairy · atk 115.1 / def 75.5 / hp 223 · Charm + Icy Wind + Swift
-    closer Vaporeon — Water · atk 118.4 / def 96.9 / hp 165 · Water Gun + Aqua Tail + Last Resort
+    lead   Raichu - Electric - atk 133.5 / def 110.6 / hp 114 - Volt Switch + Volt Tackle + Trailblaze
+    switch Wigglytuff - Normal/Fairy - atk 115.1 / def 75.5 / hp 223 - Charm + Icy Wind + Swift
+    closer Vaporeon - Water - atk 118.4 / def 96.9 / hp 165 - Water Gun + Aqua Tail + Last Resort
   corebreakers (nobody wins): Rillaboom (329)
   only one answer          : Araquanid (508), Clodsire (512), Corviknight (513), Mimikyu (Busted) (616), Carbink (669), Corsola (Galarian) (708)
-  coverage set (what the grade is based on — threat's avg rating vs your team):
+  coverage set (threat's average rating against your team):
     Rillaboom                  threat-side   745   your best answer  329   answers 0/3
     Clodsire                   threat-side   610   your best answer  512   answers 1/3
     Mimikyu (Busted)           threat-side   598   your best answer  616   answers 1/3
@@ -77,12 +77,12 @@ matchups: pvpoke (4288/4290 pairs pairs cached/simulated)
   order: Raichu (lead) -> Wigglytuff (safe swap) -> Flygon (closer)
   roles: lead 82 | switch 59 | closer 67   (PvPoke Lead/Switch/Closer scores)
   build:
-    lead   Raichu — Electric · atk 133.5 / def 110.6 / hp 114 · Volt Switch + Volt Tackle + Trailblaze
-    switch Wigglytuff — Normal/Fairy · atk 115.1 / def 75.5 / hp 223 · Charm + Icy Wind + Swift
-    closer Flygon — Ground/Dragon · atk 127.9 / def 109.5 / hp 125 · Dragon Tail + Sand Tomb + Twister
+    lead   Raichu - Electric - atk 133.5 / def 110.6 / hp 114 - Volt Switch + Volt Tackle + Trailblaze
+    switch Wigglytuff - Normal/Fairy - atk 115.1 / def 75.5 / hp 223 - Charm + Icy Wind + Swift
+    closer Flygon - Ground/Dragon - atk 127.9 / def 109.5 / hp 125 - Dragon Tail + Sand Tomb + Twister
   corebreakers (nobody wins): Rillaboom (422), Carbink (484)
   only one answer          : Araquanid (508), Corviknight (513), Clodsire (524), Marowak (594), Mimikyu (Busted) (616), Florges (652)
-  coverage set (what the grade is based on — threat's avg rating vs your team):
+  coverage set (threat's average rating against your team):
     Rillaboom                  threat-side   662   your best answer  422   answers 0/3
     Mimikyu (Busted)           threat-side   640   your best answer  616   answers 1/3
     Florges                    threat-side   623   your best answer  652   answers 1/3
@@ -98,12 +98,12 @@ matchups: pvpoke (4288/4290 pairs pairs cached/simulated)
   order: Umbreon (lead) -> Raichu (safe swap) -> Wigglytuff (closer)
   roles: lead 83 | switch 70 | closer 75   (PvPoke Lead/Switch/Closer scores)
   build:
-    lead   Umbreon — Dark · atk 90.2 / def 177.0 / hp 156 · Snarl + Dark Pulse + Last Resort
-    switch Raichu — Electric · atk 133.5 / def 110.6 / hp 114 · Volt Switch + Volt Tackle + Trailblaze
-    closer Wigglytuff — Normal/Fairy · atk 115.1 / def 75.5 / hp 223 · Charm + Icy Wind + Swift
+    lead   Umbreon - Dark - atk 90.2 / def 177.0 / hp 156 - Snarl + Dark Pulse + Last Resort
+    switch Raichu - Electric - atk 133.5 / def 110.6 / hp 114 - Volt Switch + Volt Tackle + Trailblaze
+    closer Wigglytuff - Normal/Fairy - atk 115.1 / def 75.5 / hp 223 - Charm + Icy Wind + Swift
   corebreakers (nobody wins): Rillaboom (418), Clodsire (471), Carbink (484)
   only one answer          : Araquanid (508), Ninetales (Shadow) (543), Marowak (594), Florges (652), Melmetal (732), Tinkaton (815)
-  coverage set (what the grade is based on — threat's avg rating vs your team):
+  coverage set (threat's average rating against your team):
     Rillaboom                  threat-side   664   your best answer  418   answers 0/3
     Ninetales (Shadow)         threat-side   628   your best answer  543   answers 1/3
     Clodsire                   threat-side   624   your best answer  471   answers 0/3
@@ -119,12 +119,12 @@ matchups: pvpoke (4288/4290 pairs pairs cached/simulated)
   order: Wigglytuff (lead) -> Raichu (Alolan) (safe swap) -> Vaporeon (closer)
   roles: lead 82 | switch 76 | closer 67   (PvPoke Lead/Switch/Closer scores)
   build:
-    lead   Wigglytuff — Normal/Fairy · atk 115.1 / def 75.5 / hp 223 · Charm + Icy Wind + Swift
-    switch Raichu (Alolan) — Electric/Psychic · atk 135.4 / def 109.9 / hp 111 · Volt Switch + Volt Tackle + Psyshock
-    closer Vaporeon — Water · atk 118.4 / def 96.9 / hp 165 · Water Gun + Aqua Tail + Last Resort
+    lead   Wigglytuff - Normal/Fairy - atk 115.1 / def 75.5 / hp 223 - Charm + Icy Wind + Swift
+    switch Raichu (Alolan) - Electric/Psychic - atk 135.4 / def 109.9 / hp 111 - Volt Switch + Volt Tackle + Psyshock
+    closer Vaporeon - Water - atk 118.4 / def 96.9 / hp 165 - Water Gun + Aqua Tail + Last Resort
   corebreakers (nobody wins): Rillaboom (329)
   only one answer          : Dunsparce (509), Clodsire (512), Tinkaton (587), Mimikyu (Busted) (616), Araquanid (617), Umbreon (654)
-  coverage set (what the grade is based on — threat's avg rating vs your team):
+  coverage set (threat's average rating against your team):
     Rillaboom                  threat-side   784   your best answer  329   answers 0/3
     Mimikyu (Busted)           threat-side   618   your best answer  616   answers 1/3
     Clodsire                   threat-side   618   your best answer  512   answers 1/3
@@ -140,12 +140,12 @@ matchups: pvpoke (4288/4290 pairs pairs cached/simulated)
   order: Umbreon (lead) -> Magnezone (safe swap) -> Vibrava (closer)
   roles: lead 83 | switch 66 | closer 57   (PvPoke Lead/Switch/Closer scores)
   build:
-    lead   Umbreon — Dark · atk 90.2 / def 177.0 / hp 156 · Snarl + Dark Pulse + Last Resort
-    switch Magnezone — Electric/Steel · atk 134.3 / def 121.1 / hp 102 · Volt Switch + Wild Charge + Magnet Bomb
-    closer Vibrava — Ground/Dragon · atk 125.2 / def 95.7 / hp 127 · Dragon Breath + Sand Tomb + Bulldoze
+    lead   Umbreon - Dark - atk 90.2 / def 177.0 / hp 156 - Snarl + Dark Pulse + Last Resort
+    switch Magnezone - Electric/Steel - atk 134.3 / def 121.1 / hp 102 - Volt Switch + Wild Charge + Magnet Bomb
+    closer Vibrava - Ground/Dragon - atk 125.2 / def 95.7 / hp 127 - Dragon Breath + Sand Tomb + Bulldoze
   corebreakers (nobody wins): Rillaboom (418), Clodsire (471), Altaria (474), Marowak (476), Sableye (Shadow) (496)
   only one answer          : Hydreigon (Shadow) (524), Ninetales (Shadow) (570), Araquanid (588), Umbreon (602), Dunsparce (605), Mimikyu (Busted) (615)
-  coverage set (what the grade is based on — threat's avg rating vs your team):
+  coverage set (threat's average rating against your team):
     Marowak                    threat-side   696   your best answer  476   answers 0/3
     Mimikyu (Busted)           threat-side   624   your best answer  615   answers 1/3
     Ninetales (Shadow)         threat-side   614   your best answer  570   answers 1/3
@@ -199,7 +199,5 @@ matchups: pvpoke (4288/4290 pairs pairs cached/simulated)
   #1156 Glaceon                    ice              Ice Shard, Avalanche, Water Pulse
 
 [wrote examples/mega_catch_cup.html]  open it in a browser for the full scorecards
-
-[wrote /tmp/mcc.json]
 
 Open in PvPoke: https://pvpoke.com/team-builder/mega/1500/raichu,vaporeon,wigglytuff/

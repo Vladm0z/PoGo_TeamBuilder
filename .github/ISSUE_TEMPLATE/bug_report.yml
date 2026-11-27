@@ -5,8 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for the report. The `validate` output below settles most
-        questions about scoring, so please run it first.
+        The `validate` output below settles most questions about scoring, so please run it first.
   - type: textarea
     id: what
     attributes:

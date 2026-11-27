@@ -1,15 +1,10 @@
 """
-Data layer for the PvP team builder.
+PvPoke data layer.
 
-Pulls PvPoke's public battle data (game master + per-league rankings) and turns it
-into Python objects the optimizer can chew on.  Everything is cached on disk so the
-tool keeps working offline after the first run.
-
-Data sources (public, MIT-ish/open data published by PvPoke):
-    https://pvpoke.com/data/gamemaster.json
-    https://pvpoke.com/data/rankings/{cup}/{slug}/rankings-{cp}.json
-    https://pvpoke.com/data/groups/{group}.json
-with the GitHub raw mirror as a fallback.
+Loads the gamemaster and per-league rankings into Mon objects: base stats,
+published movesets, role scores, and the matchups PvPoke publishes. Handles
+species name resolution (Shadow and regional forms included), evolution
+families, cup legality and the on-disk cache.
 """
 
 from __future__ import annotations
@@ -32,13 +27,11 @@ HERE = Path(__file__).resolve().parent
 
 def default_data_dir() -> Path:
     """
-    Where PvPoke's JSON is cached.
+    Cache directory for PvPoke's JSON, about 30 MB once populated.
 
-    Deliberately outside the working tree: the cache is downloaded data, roughly
-    30 MB, and should never be committed or show up in a checkout.
-
-    Order: $PVP_TEAM_BUILDER_DATA, then $XDG_CACHE_HOME/pvp-team-builder,
-    then ~/.cache/pvp-team-builder. `--data-dir` overrides all of it per command.
+    Kept outside the working tree so it never lands in a commit or in
+    `git status`. $PVP_TEAM_BUILDER_DATA wins, then $XDG_CACHE_HOME,
+    then ~/.cache. `--data-dir` overrides all three.
     """
     env = os.environ.get("PVP_TEAM_BUILDER_DATA")
     if env:
@@ -152,9 +145,7 @@ class DataError(RuntimeError):
     pass
 
 
-# --------------------------------------------------------------------------- #
 # Download / cache
-# --------------------------------------------------------------------------- #
 class Store:
     """Local cache of PvPoke JSON files."""
 
@@ -214,9 +205,7 @@ class Store:
         return json.loads(path.read_text())
 
 
-# --------------------------------------------------------------------------- #
 # Core model
-# --------------------------------------------------------------------------- #
 @dataclass(frozen=True, eq=False)
 class Mon:
     """A species as it appears in one league's rankings."""
@@ -233,7 +222,8 @@ class Mon:
     rank: int = 0
     notes: str = ""
 
-    # -- convenience ------------------------------------------------------- #
+
+    # Convenience
     @property
     def role(self) -> str:
         """Dominant PvPoke role, for display only."""
@@ -269,13 +259,7 @@ FORM_WORDS = set(FORM_ALIASES.values()) | {"alolan", "galarian", "hisuian", "pal
 
 
 class Meta:
-    """
-    One league (+ optional cup) view over PvPoke's data.
-
-    Holds the rankings table, species/move lookups, alias resolution and the
-    matchup matrix.  `matchup(a, b)` returns a 0-1000 rating in the style of
-    PvPoke: 500 = dead even, >500 a wins, <500 a loses.
-    """
+    """One league and cup view over PvPoke's data: rankings, lookups, matchups."""
 
     def __init__(self, league: str = "great", cup: str = "all", data_dir: str | Path | None = None,
                  refresh: bool = False, offline: bool = False, quiet: bool = False):
@@ -302,7 +286,8 @@ class Meta:
         for slug in RANKING_SLUGS:
             self._load_ranking_slug(slug)
 
-    # -- loading ----------------------------------------------------------- #
+
+    # Loading
     def _load_ranking_slug(self, slug: str) -> None:
         rel = f"rankings/{self.cup}/{slug}/rankings-{self.cp}.json"
         rows = self.store.get(rel, local_name=f"rankings-{self.cup}-{self.cp}-{slug}.json", required=False)
@@ -366,7 +351,8 @@ class Meta:
                 idx.setdefault(_norm(p["speciesName"]), sid)
         return idx
 
-    # -- lookup ------------------------------------------------------------ #
+
+    # Lookup
     def get(self, key: str) -> Mon:
         sid = self.resolve(key)
         if sid not in self.rankings:
@@ -424,11 +410,12 @@ class Meta:
 
         close = difflib.get_close_matches(base or raw, list(self._alias), n=3, cutoff=0.72)
         hint = ", ".join(self._alias[c] for c in close)
-        raise DataError(f"unknown Pokemon {key!r}" + (f" — did you mean: {hint}?" if hint else ""))
+        raise DataError(f"unknown Pokemon {key!r}" + (f"; did you mean: {hint}?" if hint else ""))
 
-    # -- families / evolutions --------------------------------------------- #
+
+    # Families / evolutions
     def family_chain(self, species_id: str, include_shadows: bool = False) -> list[str]:
-        """All species in the same evolution family, ancestors first."""
+        """Species in the same evolution family, ancestors first."""
         data = self._pokemon.get(species_id)
         if not data or not data.get("family"):
             return [species_id]
@@ -452,11 +439,10 @@ class Meta:
             order.append(sid)
             queue.extend((self._pokemon.get(sid, {}).get("family") or {}).get("evolutions") or [])
         out = [m for m in order if m in members]
-        for m in members:                      # forms that aren't linked in the tree
+        for m in members:                      # forms missing from the tree
             if m not in out:
                 out.append(m)
-        # Shadow forms are variants of an existing family member, not extra
-        # members: only add them when explicitly asked for.
+        # A Shadow form is a variant of an existing member, not an extra one.
         if not include_shadows:
             out = [m for m in out if not m.endswith("_shadow")]
         return out or [species_id]
@@ -467,11 +453,7 @@ class Meta:
 
     def expand_evolutions(self, species_id: str, include_megas: bool = True,
                           keep_base: bool = True, include_shadows: bool = False) -> list[str]:
-        """
-        Every playable form of this Pokemon's family that is ranked in the
-        current league/cup -- ancestors, the mon itself, its evolutions, and
-        (optionally) Mega Evolutions.
-        """
+        """Ranked members of this evolution family, optionally including Megas."""
         ids = []
         for sid in self.family_chain(species_id):
             ids.append(sid)
@@ -519,17 +501,15 @@ class Meta:
                                        + (" ..." if len(f["values"]) > 8 else ""))
         return rules
 
-    # -- matchup matrix ---------------------------------------------------- #
+
+    # Matchup matrix
     def matchup(self, a: Mon, b: Mon) -> float:
         """
-        Rating of `a` vs `b` on PvPoke's 0-1000 scale (500 = even).
+        Rating of `a` against `b`, 0-1000, 500 even.
 
-        Priority order:
-          1. PvPoke's published number, when `a`'s top-5 scorecard includes `b`
-             (this is the exact value the site shows).
-          2. The simulated matrix (engine.MatchupMatrix) -- also PvPoke's own
-             engine, so also exact, just not published in the rankings JSON.
-          3. A typing/stats estimate, flagged as such.
+        PvPoke's published number if the pair appears in `a`'s scorecard, else
+        the simulated matrix, else a type and stat estimate. Ratings are
+        directional, so `a` vs `b` and `b` vs `a` are separate values.
         """
         if b.species_id in a.scorecard:
             return a.scorecard[b.species_id]
@@ -561,18 +541,15 @@ class Meta:
         raw = 500 + 150 * type_edge + 400 * bulk_edge + 260 * atk_edge
         return float(min(1000, max(0, round(raw))))
 
-    # -- views ------------------------------------------------------------- #
+
+    # Views
     def load_group(self, name: str) -> list[str]:
         """Species ids of a PvPoke ranking group (e.g. 'great', 'megagreat')."""
         rows = self.store.get(f"groups/{name}.json", local_name=f"group-{name}.json", required=False)
         return [r["speciesId"] for r in (rows or []) if r.get("speciesId")]
 
     def tracked_species(self, limit: int = 6, elo: int | None = None) -> list[str]:
-        """
-        "What you will actually face": the top `limit` of the current meta group
-        (PvPoke's own definition of the meta for this format), falling back to
-        the plain rankings.
-        """
+        """Top `limit` of the format's meta group, one per evolution family."""
         group = self.meta_group()
         originals = [g.replace("_shadow", "") for g in group]
         ordered = [sid for sid in self.order if sid.replace("_shadow", "") in originals]
@@ -591,11 +568,9 @@ class Meta:
 
     def threats_for(self, n: int) -> list[Mon]:
         """
-        The `n` most relevant threats to grade against.
-
-        Uses PvPoke's meta group for this exact format (e.g. 'megagreat' for
-        Mega Great League) ordered by overall ranking, and falls back to the
-        plain top-n of the rankings if no group matches.
+        The `n` threats to grade against: the format's own meta group (for
+        example 'megagreat'), ordered by overall ranking, topped up from the
+        plain rankings when the group is smaller than `n`.
         """
         group = set(self.meta_group())
         picked = [sid for sid in self.order if sid in group]

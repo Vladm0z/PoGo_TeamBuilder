@@ -1,32 +1,16 @@
 """
-The "5 minute team" process, as code.
+Team scoring for the r/TheSilphArena "decent team in 5 minutes" workflow.
 
-The post this automates (r/TheSilphArena, "How to Build a Decent Team in 5
-Minutes") is five manual steps in GO Battle Log + PvPoke:
+PvPoke turns each 1v1 into a 0-1000 rating (500 = even) and reports two things
+per team (js/interface/TeamInterface.js):
 
-  1. Take the top meta Pokemon you actually own as your first pick.
-  2. Import the meta into PvPoke's team builder (scorecard length 30).
-  3. Rate the team, add the highest-rated "potential alternative" you own,
-     rate again, add again.
-  4. Read the Leads ranking to decide your lead.
-  5. Read Switches / Closers to know how to play a bad lead.
+- a meta scorecard: for the top N threats, whether each team member wins and
+  how many answers the team has;
+- a coverage grade from the average rating against the six most dangerous
+  threats, graded as letter(1200 - avg, goal = 680).
 
-`TeamEvaluator` reimplements steps 2-3 numerically; `search_teams` runs it over
-every combination of your box.
-
-Scoring mirrors PvPoke's team builder
--------------------------------------
-PvPoke turns each 1v1 into a 0-1000 rating (500 = dead even) and then reports
-two things (`js/interface/TeamInterface.js`):
-
-  * the **meta scorecard**: for your top-N threats, whether each of your three
-    Pokemon wins (> 500), and how many answers you have;
-  * a **coverage grade** from the average rating against your 6 most dangerous
-    threats, graded as `letter(1200 - avg, goal = 680)` ->
-    A at >= 90% (avg <= 588), B >= 80%, C >= 70%, D >= 60%, else F.
-
-That second number is the closest thing PvPoke has to a single team quality
-score, so it drives the ranking here, with scorecard pass-rate as a tie-break.
+Coverage is the closest thing PvPoke has to a single team quality number, so it
+drives the ranking, with scorecard pass rate as a tie-break.
 """
 
 from __future__ import annotations
@@ -42,19 +26,17 @@ ROLE_NAMES = ("lead", "switch", "closer")
 
 
 def is_mega(mon: Mon) -> bool:
-    """Mega Evolutions are separate ranked forms; only one may be on a team."""
+    """Mega Evolutions are separate ranked forms and are capped per team."""
     return "_mega" in mon.species_id or "mega" in (mon.species_id.split("_") or [])
 GRADE_SCALE = (("A", 0.9), ("B", 0.8), ("C", 0.7), ("D", 0.6))
 COVERAGE_GOAL = 680
 
 
-# --------------------------------------------------------------------------- #
 # PvPoke-style grades
-# --------------------------------------------------------------------------- #
 def letter_grade(value: float, goal: float) -> str:
     """PvPoke's calculateLetterGrade()."""
     pct = value / goal if goal else 0
-    for name, threshold in GRADE_SCALE:      # A (0.9) first
+    for name, threshold in GRADE_SCALE:      # highest threshold first
         if pct >= threshold:
             return name
     return "F"
@@ -62,16 +44,14 @@ def letter_grade(value: float, goal: float) -> str:
 
 def coverage_grade(threat_avg_rating: float) -> str:
     """
-    PvPoke's coverage grade: letter(1200 - avg, goal 680), where `avg` is the
-    **threat's** average rating against your team (higher = the threat wins).
-    Their team builder computes the scorecard from the threat's side, so this
-    matches js/interface/TeamInterface.js exactly.
+    PvPoke's coverage grade: letter(1200 - avg, goal 680), with `avg` measured
+    from the threat's side. Mirrors TeamInterface.js.
     """
     return letter_grade(1200 - threat_avg_rating, COVERAGE_GOAL)
 
 
 def coverage_from_our_perspective(our_avg_rating: float) -> str:
-    """Same grade, given our-side ratings (1000 - threat side, near enough)."""
+    """Same grade from our-side ratings. Approximation: ratings are directional."""
     return coverage_grade(1000 - our_avg_rating)
 
 
@@ -80,9 +60,7 @@ def grade_for(score: float) -> str:
     return coverage_grade(score)
 
 
-# --------------------------------------------------------------------------- #
 # Result object
-# --------------------------------------------------------------------------- #
 @dataclass
 class Ranking:
     """One scored team plus everything needed to explain it."""
@@ -103,7 +81,8 @@ class Ranking:
     coverage_set: tuple[str, ...] = ()   # the 6 threats that set the coverage grade
     estimated: int = 0
 
-    # -- presentation ------------------------------------------------------ #
+
+    # Presentation
     @property
     def score(self) -> float:
         """Ranking value: PvPoke's threat-side coverage number, flipped to our side."""
@@ -157,9 +136,7 @@ class Ranking:
         return d
 
 
-# --------------------------------------------------------------------------- #
 # Threat diversity (PvPoke only counts one representative per "kind" of threat)
-# --------------------------------------------------------------------------- #
 def _base_species(species_id: str) -> str:
     for suffix in ("_shadow", "_mega", "_mega_x", "_mega_y", "_xs", "_xl", "_busted",
                    "_meteor", "_core", "_blade", "_shield", "_gorging", "_gulping"):
@@ -174,7 +151,7 @@ def _similar(a: Mon, b: Mon) -> bool:
 
 
 def worst_threats(per_threat: dict[str, dict], rankings: dict[str, Mon], n: int = 6) -> list[str]:
-    """The `n` most dangerous distinct threats, as PvPoke's coverage grade does."""
+    """The `n` most dangerous distinct threats; one per species and type combo."""
     ordered = sorted(per_threat, key=lambda t: -per_threat[t].get("threat_avg", -per_threat[t]["best"]))
     chosen: list[Mon] = []
     out: list[str] = []
@@ -191,9 +168,7 @@ def worst_threats(per_threat: dict[str, dict], rankings: dict[str, Mon], n: int 
     return out
 
 
-# --------------------------------------------------------------------------- #
 # Evaluator
-# --------------------------------------------------------------------------- #
 class TeamEvaluator:
     """Scores candidate teams against a threat list."""
 
@@ -204,7 +179,8 @@ class TeamEvaluator:
         self.threats: list[Mon] = list(threat_list) if threat_list else list(meta.ranked(scorecard_size))
         self.penalty = penalty
 
-    # -- one team ---------------------------------------------------------- #
+
+    # One team
     def evaluate(self, team: Sequence[Mon]) -> Ranking:
         team = tuple(team)
         per_threat: dict[str, dict] = {}
@@ -214,8 +190,7 @@ class TeamEvaluator:
             for mine in team:
                 ours = self.meta.matchup(mine, t)
                 ratings[mine.species_id] = ours
-                # PvPoke's scorecard is built from the threat's side; we have
-                # the simulated value in that direction too.
+                            # PvPoke builds its scorecard from the threat's side.
                 threat_side.append(self.meta.matchup(t, mine))
                 if t.species_id not in mine.scorecard:
                     estimated += 1
@@ -259,7 +234,8 @@ class TeamEvaluator:
         ranking.roles, ranking.role_scores = self.assign_roles(team)
         return ranking
 
-    # -- steps 4 and 5 of the post ---------------------------------------- #
+
+    # Steps 4 and 5 of the post
     def assign_roles(self, team: Sequence[Mon]) -> tuple[dict[str, str], dict[str, float]]:
         """
         Lead = highest rated in PvPoke's *Leads* ranking (step 4).
@@ -283,7 +259,8 @@ class TeamEvaluator:
              "closer": cl.scores.get("closers", 0)},
         )
 
-    # -- step 3 of the post: greedy "add the best alternative" ------------- #
+
+    # Step 3 of the post: greedy "add the best alternative"
     def greedy_build(self, pool: Sequence[Mon], max_megas: int | None = None) -> list[Mon]:
         """Start from the best-ranked mon you own, then add the best next pick twice."""
         if not pool:
@@ -313,9 +290,7 @@ class TeamEvaluator:
         return team
 
 
-# --------------------------------------------------------------------------- #
 # Search
-# --------------------------------------------------------------------------- #
 @dataclass
 class SearchResult:
     rankings: list[Ranking]
@@ -330,11 +305,11 @@ def search_teams(meta, pool: Sequence[Mon], top_k: int = 10, scorecard_size: int
                  threat_list: Sequence[Mon] | None = None, dedupe_core: bool = False,
                  max_megas: int | None = 1) -> SearchResult:
     """
-    Enumerate combinations of `pool` and return the best `top_k`.
+    Enumerate combinations of `pool`, return the best `top_k`.
 
-    Above `max_exhaustive` combinations only the most promising subset of the
-    box is enumerated (ranked by solo score), which keeps a 60-mon box fast;
-    the survivors are always evaluated against the full threat list.
+    Above `max_exhaustive` combinations the box is pre-filtered by solo score.
+    Pre-filtering has changed the winning team in practice, so the default
+    threshold is generous.
     """
     pool = list(pool)
     if len(pool) < team_size:
@@ -353,8 +328,7 @@ def search_teams(meta, pool: Sequence[Mon], top_k: int = 10, scorecard_size: int
     if max_megas is not None:
         combos = (c for c in combos if sum(1 for m in c if is_mega(m)) <= max_megas)
     results: list[Ranking] = [evaluator.evaluate(c) for c in combos]
-    # Rank by PvPoke's own team metric first (coverage vs your worst threats),
-    # then by how much of the scorecard you actually answer.
+    # Worst threat first: it is the number that decides a losing team.
     results.sort(key=lambda r: (r.threat_worst6, -r.coverage_pct, -r.best_mean))
     if dedupe_core:
         results = dedupe_by_core(results)
@@ -377,15 +351,13 @@ def dedupe_by_core(results: list[Ranking], max_repeat: int = 2) -> list[Ranking]
     return out or results
 
 
-# --------------------------------------------------------------------------- #
 # Text report
-# --------------------------------------------------------------------------- #
 def mon_line(mon: Mon) -> str:
-    """One-line stat/moveset summary, e.g. `Lucario - Fighting/Steel 114.6/108.9/141 [Counter, Power-Up Punch, ...]`."""
+    """One-line stat and moveset summary for reports."""
     types = "/".join(t.title() for t in mon.types)
     moves = " + ".join(m.lower().title() if False else m for m in mon.move_names())
-    return (f"{mon.name} — {types} · atk {mon.stats['atk']:.1f} / def {mon.stats['def']:.1f} / "
-            f"hp {mon.stats['hp']:.0f} · {moves}")
+    return (f"{mon.name} - {types} - atk {mon.stats['atk']:.1f} / def {mon.stats['def']:.1f} / "
+            f"hp {mon.stats['hp']:.0f} - {moves}")
 
 
 def describe_team(r: Ranking, meta, evaluator: TeamEvaluator, show_threats: int = 6,
@@ -414,7 +386,7 @@ def describe_team(r: Ranking, meta, evaluator: TeamEvaluator, show_threats: int 
         lines.append("  only one answer          : " +
                      ", ".join(f"{n} ({v:.0f})" for n, v in r.single_answer[:show_threats]))
     if r.coverage_set:
-        lines.append("  coverage set (what the grade is based on — threat's avg rating vs your team):")
+        lines.append("  coverage set (threat's average rating against your team):")
         for tid in r.coverage_set:
             d = r.per_threat[tid]
             lines.append(f"    {meta.rankings[tid].name:<26} threat-side {d['threat_avg']:5.0f}"

@@ -1,10 +1,4 @@
-"""
-pvp-team-builder: team search for Pokemon GO PvP.
-
-Scores candidate teams with PvPoke's own battle engine and ranks them the way
-PvPoke's team builder reports them (meta scorecard + coverage grade).
-
-Typical use:
+"""Team search for Pokemon GO PvP, scored with PvPoke's own battle engine.
 
     from pvp_team_builder import Meta, TeamEvaluator, search_teams
     from pvp_team_builder.engine import MatchupMatrix

@@ -32,9 +32,8 @@ const ENGINE_FILES = [
   'Battle.js',
 ];
 
-// --------------------------------------------------------------------------
+
 // Minimal jQuery stand-in: enough of $.ajax to feed the local gamemaster.
-// --------------------------------------------------------------------------
 function makeJQuery(gamemasterPath) {
   function noopObj() {
     const o = function () { return o; };
@@ -120,9 +119,8 @@ function makeContext(gamemasterPath) {
   return sandbox;
 }
 
-// --------------------------------------------------------------------------
+
 // Pair rating (mirrors TeamRanker.js / BattleHistogram conventions)
-// --------------------------------------------------------------------------
 function ratePair(ctx, battle, a, b, shields) {
   battle.setNewPokemon(a, 0, false);
   battle.setNewPokemon(b, 1, false);

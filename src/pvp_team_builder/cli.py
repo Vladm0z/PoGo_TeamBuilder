@@ -1,13 +1,8 @@
 """
 Command line interface.
 
-    # rank every combination of the Pokemon you own
     pvp-team-builder teambuild -l great --mons "Azumarill, Skarmory, Clodsire" --elo 1800
-
-    # from a file, with evolutions expanded, for a specific cup
     pvp-team-builder teambuild -l great --cup "mega catch cup" --file my_box.txt --evolutions
-
-    # score one team in detail
     pvp-team-builder rate -l ultra --mons "Talonflame, Swampert, Obstagoon"
 """
 
@@ -45,9 +40,7 @@ def wire_engine(meta: Meta, args, species: list[str]) -> str:
         return "simple (fallback: typing/stats estimates)"
 
 
-# --------------------------------------------------------------------------- #
 # Helpers
-# --------------------------------------------------------------------------- #
 def parse_list(items: list[str] | None, file: str | None) -> list[str]:
     raw: list[str] = []
     if file:
@@ -73,9 +66,8 @@ def resolve_pool(meta: Meta, names: list[str], evolutions: bool = False,
     """
     Resolve names to Mon objects.
 
-    With `evolutions`, each name also contributes its whole family (and its
-    Mega Evolutions), so "eevee" means all eight Eeveelutions and "magneton"
-    means Magnemite/Magneton/Magnezone.
+    With `evolutions`, each name contributes its whole family and its Megas:
+    "eevee" means all eight Eeveelutions, "trapinch" means Flygon too.
     """
     pool, missing, notes = [], [], {}
     for n in names:
@@ -136,9 +128,7 @@ def fmt_team(r, meta) -> str:
     return f"{lead.name} / {switch.name} / {closer.name}"
 
 
-# --------------------------------------------------------------------------- #
 # Commands
-# --------------------------------------------------------------------------- #
 def cmd_teambuild(args) -> int:
     meta = build_meta(args)
     names = parse_list(args.mons, args.file)
@@ -171,7 +161,7 @@ def cmd_teambuild(args) -> int:
     print(f"matchups: {engine_info}")
     if meta.cup in ("mega", "catch"):
         print("[i] Catch Cup legality depends on when you caught each Pokemon "
-              "(this season only) — that is assumed, not checked.")
+              "(this season only): assumed, not checked.")
 
     result = search_teams(
         meta, pool,
@@ -358,7 +348,7 @@ def cmd_info(args) -> int:
     return 0
 
 
-# --------------------------------------------------------------------------- #
+# -
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="pvp-team-builder",

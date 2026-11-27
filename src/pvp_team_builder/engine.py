@@ -1,20 +1,13 @@
 """
-Exact matchup matrix, computed by PvPoke's own battle engine via Node.
+Matchup matrix computed by PvPoke's own battle engine.
 
-PvPoke's rankings only publish each Pokemon's top 5 wins and top 5 losses, so
-any team search over an arbitrary box needs the full matrix.  Rather than
-approximating it, this module runs PvPoke's real code (GameMaster.js,
-Pokemon.js, Battle.js, ActionLogic.js, ...) headlessly in a Node vm sandbox —
-see `pvpoke_engine/harness.js` — with each Pokemon's *published* moveset.
+PvPoke publishes only each Pokemon's five best and five worst matchups, so any
+team search needs the full matrix. This module runs PvPoke's battle scripts
+headlessly through Node (see harness.js) with each Pokemon's published moveset,
+and caches the results in data/matrix-<cup>-<cp>.json.
 
-Validation (`validate.py`): against the ratings PvPoke actually published
-(their single-shield 1v1 simulations) this reproduces **100% exactly**
-(0 error over 495 pairs in Great and Ultra League).  It is not an
-approximation of PvPoke — it is PvPoke.
-
-The matrix is cached in `data/matrix-<cup>-<cp>.json`, so runs after the first
-are instant and work offline.  Without Node (or with `--engine simple`) the
-tool falls back to fast typing/stat estimates from `pvp.Meta._estimate`.
+Ratings match what pvpoke.com publishes exactly; validate.py checks that.
+Without Node the caller falls back to Meta._estimate.
 """
 
 from __future__ import annotations
@@ -95,7 +88,7 @@ def run_pairs(gamemaster: Path, pairs: Sequence[tuple[str, str]], cp: int, cup: 
     """Rate pairs with PvPoke's engine. Returns {(a, b): {...}}."""
     node = node_path()
     if node is None:
-        raise EngineUnavailable("node not found — install Node.js, or use --engine simple")
+        raise EngineUnavailable("node not found: install Node.js, or use --engine simple")
     scripts = ensure_engine(directory)
     payload = {
         "gamemaster": str(Path(gamemaster).resolve()),
@@ -125,10 +118,10 @@ def run_pairs(gamemaster: Path, pairs: Sequence[tuple[str, str]], cp: int, cup: 
 
 class MatchupMatrix:
     """
-    Lazily-built, disk-cached full matrix for a set of species.
+    Lazily built, disk-cached matrix for a set of species.
 
-    `rating(a, b)` returns PvPoke's 0-1000 rating (500 = even).  Both
-    directions are simulated because turn order means a vs b != 1 - b vs a.
+    `rating(a, b)` is PvPoke's 0-1000 rating. Both directions are simulated:
+    turn order means a vs b is not the complement of b vs a.
     """
 
     def __init__(self, meta, species_ids: Iterable[str], refresh: bool = False,
@@ -142,7 +135,8 @@ class MatchupMatrix:
         self._load_cache(refresh)
         self._ensure(allow_download)
 
-    # -- cache ------------------------------------------------------------- #
+
+    # Cache
     def _load_cache(self, refresh: bool) -> None:
         if refresh or not self.cache_file.exists():
             return
@@ -156,7 +150,8 @@ class MatchupMatrix:
         self.cache_file.parent.mkdir(parents=True, exist_ok=True)
         self.cache_file.write_text(json.dumps({f"{a}|{b}": v for (a, b), v in self.data.items()}))
 
-    # -- building ---------------------------------------------------------- #
+
+    # Building
     def _ensure(self, allow_download: bool) -> None:
         wanted = [(a, b) for a in self.ids for b in self.ids if a != b]
         missing = [p for p in wanted if p not in self.data]
@@ -179,7 +174,8 @@ class MatchupMatrix:
         self.simulated = len(rows)
         self._save_cache()
 
-    # -- access ------------------------------------------------------------ #
+
+    # Access
     def rating(self, a: str, b: str) -> int | None:
         return self.data.get((a, b))
 
