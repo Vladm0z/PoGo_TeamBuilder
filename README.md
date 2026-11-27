@@ -1,5 +1,4 @@
-# pvp-team-builder
-Team search for Pokemon GO PvP. Point it at the Pokemon you own and it scores every legal three-Pokemon team against the current meta, then reports the best ones with a lead, safe swap, closer and full movesets.
+Team search for Pokemon GO PvP (based on [How to Build a *Decent* Team in 5 Minutes reddit post](https://www.reddit.com/r/TheSilphArena/comments/1dmu3xk/how_to_build_a_decent_team_in_5_minutes/)). Point it at the Pokemon you own and it scores every legal three-Pokemon team against the current meta, then reports the best ones with a lead, safe swap, closer and full movesets.
 
 Scores are not estimates. The tool runs PvPoke's own battle scripts headlessly through Node and reproduces the ratings published on pvpoke.com exactly; `validate` checks that it still does.
 
@@ -32,13 +31,11 @@ Without Node the tool still runs with `--engine simple`, which uses type and sta
 ## Install
 
 ```bash
-git clone https://github.com/USER/pvp-team-builder   # replace USER with your account
+git clone https://github.com/Vladm0z/PoGo_TeamBuilder
 cd pvp-team-builder
 python -m venv .venv && . .venv/bin/activate
 pip install -e .
 ```
-
-To create the remote repository from this checkout, run `scripts/publish.sh`. It needs the GitHub CLI and sets the description, topics and remote before pushing.
 
 ## Usage
 
