@@ -1,4 +1,4 @@
-Team search for Pokemon GO PvP (based on [How to Build a *Decent* Team in 5 Minutes reddit post](https://www.reddit.com/r/TheSilphArena/comments/1dmu3xk/how_to_build_a_decent_team_in_5_minutes/)). Point it at the Pokemon you own and it scores every legal three-Pokemon team against the current meta, then reports the best ones with a lead, safe swap, closer and full movesets.
+Team search for Pokemon GO PvP (based on [How to Build a *Decent* Team in 5 Minutes reddit post](https://www.reddit.com/r/TheSilphArena/comments/1dmu3xk/how_to_build_a_decent_team_in_5_minutes/) from r/TheSilphArena ). Point it at the Pokemon you own and it scores every legal three-Pokemon team against the current meta, then reports the best ones with a lead, safe swap, closer and full movesets.
 
 Scores are not estimates. The tool runs PvPoke's own battle scripts headlessly through Node and reproduces the ratings published on pvpoke.com exactly; `validate` checks that it still does.
 
@@ -45,7 +45,7 @@ Write your Pokemon one per line, with `#` for comments, then run one of the foll
 # open Great League, 1800 rating
 pvp-team-builder teambuild -l great --file my_box.txt --elo 1800
 
-# a cup, expanding each Pokemon to its full evolution family
+# expand each Pokemon to its full evolution family
 pvp-team-builder teambuild -l great --cup "mega catch cup" --file my_box.txt --evolutions
 
 # ad-hoc list, top 10 instead of 5, plus an HTML report
@@ -155,35 +155,3 @@ result = search_teams(meta, box, top_k=5, threat_list=threats, max_megas=1)
 for ranking in result.rankings:
     print(ranking.grade, ranking.score, [m.name for m in ranking.ordered()])
 ```
-
-## Performance
-
-Every matchup is simulated once and cached, so repeat runs only pay for scoring. Times below are on a warm cache.
-
-- 15 Pokemon, 455 combinations: under 1 s.
-- 41 forms, 10434 combinations: about 2.5 s.
-- 60 Pokemon, 34220 combinations: about 8 s.
-
-Above `--max-exhaustive` the box is pre-filtered by solo score, which the output reports. Pre-filtering has changed the winning team in testing, so leave the default alone unless the box is genuinely large.
-
-## Limitations and Artifacts
-- Coverage, and therefore the ranking, comes from 1v1 simulations. Team-level effects such as switch advantage, alignment and energy carry-over are not simulated at all.
-- The threat list is PvPoke's meta group for the format. A cup with a thin or unusual meta will grade teams against threats you rarely meet.
-- Catch Cup legality is taken as given. The tool has no way to know what your account caught in the current season.
-- Without Node the fallback estimator is fast and rough. Its rankings are not comparable with the exact engine's.
-- All simulation, moveset and ranking data is PvPoke's. This repository redistributes none of it; data and scripts are downloaded at runtime.
-
-## Credits
-All simulation and ranking data is PvPoke's, by pvpoke, and the project is not affiliated with it. The workflow being automated is the community guide ["How to Build a Decent Team in 5 Minutes"](https://www.reddit.com/r/TheSilphArena/comments/1dmu3xk/how_to_build_a_decent_team_in_5_minutes/) from r/TheSilphArena.
-
-## Versions
-The tool tracks PvPoke's data rather than the game's patches, so dates here are release dates of this repository.
-
-Date | Version | Notes
-:--- | :-----: | :------
-2026-11-27 | 1.1.0 | Cache moved out of the checkout. Documentation and comment restyle.
-2026-11-26 | 1.0.0 | First release: exact engine bridge, team search, validation, HTML report.
-
-## License
-
-MIT. See [LICENSE](LICENSE).
