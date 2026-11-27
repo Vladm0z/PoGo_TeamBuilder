@@ -355,7 +355,7 @@ def dedupe_by_core(results: list[Ranking], max_repeat: int = 2) -> list[Ranking]
 def mon_line(mon: Mon) -> str:
     """One-line stat and moveset summary for reports."""
     types = "/".join(t.title() for t in mon.types)
-    moves = " + ".join(m.lower().title() if False else m for m in mon.move_names())
+    moves = " + ".join(mon.move_names())
     return (f"{mon.name} - {types} - atk {mon.stats['atk']:.1f} / def {mon.stats['def']:.1f} / "
             f"hp {mon.stats['hp']:.0f} - {moves}")
 
