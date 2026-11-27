@@ -19,10 +19,8 @@ from pvp_team_builder.scoring import (
 def meta():
     return Meta("great", quiet=True)
 
-
-# --------------------------------------------------------------------------- #
-# Data layer
-# --------------------------------------------------------------------------- #
+ 
+# Data layer 
 def test_type_chart():
     assert type_multiplier("fairy", ["dragon", "flying"]) == pytest.approx(SE * 1.0)
     assert type_multiplier("dragon", ["fairy"]) == pytest.approx(IMMUNE)
@@ -32,7 +30,7 @@ def test_type_chart():
 
 
 def test_stats_match_pvpoke():
-    # Azumarill's ranked Great League spread is L43 4/15/13 -> 93.4/134.4/191
+    # Azumarill
     stats = stats_at({"atk": 112, "def": 152, "hp": 225}, 43, (4, 15, 13))
     assert stats["atk"] == pytest.approx(93.4, abs=0.2)
     assert stats["hp"] == 191
@@ -55,7 +53,6 @@ def test_rankings_loaded(meta):
     assert azu.types == ("water", "fairy")
     assert azu.moveset[0] == "BUBBLE"
     assert azu.scores["overall"] > 80
-    # roles come from the per-role ranking files
     assert meta.get("mimikyu").scores["leads"] >= 90
 
 
@@ -64,10 +61,8 @@ def test_cup_cp_switch():
     assert little.cp == 500
     assert len(little.rankings) > 100
 
-
-# --------------------------------------------------------------------------- #
-# Scoring
-# --------------------------------------------------------------------------- #
+ 
+# Scoring 
 def test_letter_grade_matches_pvpoke():
     # PvPoke: calculateLetterGrade(value, goal) -> A >= 90%, B >= 80%, ...
     assert letter_grade(680, 680) == "A"
@@ -97,7 +92,6 @@ def test_evaluate_team(meta):
     assert r.grade in {"A", "B", "C", "D", "F"}
     assert len(r.per_threat) == 20
     assert set(r.roles) == {"lead", "switch", "closer"}
-    # lead must be the mon with the best leads score
     lead = max(team, key=lambda m: m.scores["leads"])
     assert r.roles["lead"] == lead.species_id
 
@@ -124,10 +118,8 @@ def test_team_builder_link(meta):
     mons = [meta.get(x) for x in ("azumarill", "skarmory")]
     assert meta.team_builder_link(mons) == "https://pvpoke.com/team-builder/all/1500/azumarill,skarmory/"
 
-
-# --------------------------------------------------------------------------- #
-# Engine (skipped when Node isn't available)
-# --------------------------------------------------------------------------- #
+ 
+# Engine (skipped when Node isn't available) 
 needs_node = pytest.mark.skipif(not node_path() or not node_path(), reason="node not installed")
 
 
@@ -140,10 +132,8 @@ def test_engine_reproduces_published_ratings(meta):
     for (a, b), expected in published.items():
         assert matrix.rating(a, b) == expected, f"{a} vs {b}"
 
-
-# --------------------------------------------------------------------------- #
-# Cup rules, evolution expansion, mega limit (Mega Catch Cup)
-# --------------------------------------------------------------------------- #
+ 
+# Cup rules, evolution expansion, mega limit (Mega Catch Cup) 
 @pytest.fixture(scope="module")
 def mega_meta():
     return Meta("great", cup="mega catch cup", quiet=True)
@@ -162,13 +152,13 @@ def test_evolution_expansion(mega_meta):
         "leafeon", "glaceon", "sylveon"}
     assert mega_meta.expand_evolutions("magneton") == ["magnemite", "magneton", "magnezone"]
     assert mega_meta.expand_evolutions("rattata") == ["raticate", "raticate_alolan"]
-    # shadows are opt-in (Umbreon has no Shadow form; Machamp does)
+    # shadows are opt-in
     assert "machamp_shadow" in mega_meta.expand_evolutions("machamp", include_shadows=True)
     assert "machamp_shadow" not in mega_meta.expand_evolutions("machamp")
     # megas are included by default, excludable
     assert "lucario_mega" in mega_meta.expand_evolutions("lucario")
     assert mega_meta.expand_evolutions("lucario", include_megas=False) == ["lucario"]
-    # toxtricity's alternate forms aren't ranked in this cup: base form only
+    # toxtricity's alternate forms aren't ranked in this cup
     assert mega_meta.expand_evolutions("toxtricity") == ["toxtricity"]
 
 
@@ -190,7 +180,6 @@ def test_one_mega_per_team(mega_meta):
 
 
 def test_coverage_grade_is_threat_side():
-    # threat-side 520 -> 1200-520=680 -> exactly the goal -> A
     assert coverage_grade(520) == "A"
     assert coverage_grade(600) == "B"      # 600/680 = 88%
     assert coverage_grade(700) == "C"      # 500/680 = 74%

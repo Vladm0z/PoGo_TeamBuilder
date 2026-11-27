@@ -1,4 +1,3 @@
-# A deliberately realistic "what a returning player owns" Great League box.
 # One per line, or comma separated. Comments with # are ignored.
 Azumarill
 Skarmory
