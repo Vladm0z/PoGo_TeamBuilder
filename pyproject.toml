@@ -50,7 +50,16 @@ addopts = "-q"
 [tool.ruff]
 line-length = 110
 target-version = "py310"
+# `ruff format` also rewrites Python snippets inside Markdown; those are documentation
+# samples with hand-aligned comments, so leave Markdown and the generated reports alone.
+extend-exclude = ["examples", "*.md"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B"]
 ignore = ["E501"]
+# W291/W293 (trailing whitespace) are in the rule set above, so `ruff check` catches
+# them; `ruff format` does not remove them outside code lines.
+
+[tool.ruff.format]
+line-ending = "lf"
+

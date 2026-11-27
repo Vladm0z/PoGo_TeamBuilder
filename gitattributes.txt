@@ -1,0 +1,7 @@
+# Normalise text files on commit, so an editor that saves CRLF or trailing spaces
+# cannot reach CI.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary

@@ -15,20 +15,19 @@ from .scoring import Ranking, TeamEvaluator
 
 def _cell_class(rating: float) -> str:
     if rating >= 650:
-        return "w2"      # comfortable win
+        return "w2"  # comfortable win
     if rating > 500:
-        return "w1"      # win
+        return "w1"  # win
     if rating > 350:
-        return "l1"      # loss
-    return "l2"          # bad loss
+        return "l1"  # loss
+    return "l2"  # bad loss
 
 
 def _grade_class(grade: str) -> str:
     return {"A": "g-a", "B": "g-b", "C": "g-c", "D": "g-d"}.get(grade, "g-f")
 
 
-def team_card(rank: int, r: Ranking, meta, evaluator: TeamEvaluator,
-              threat_table: bool = True) -> str:
+def team_card(rank: int, r: Ranking, meta, evaluator: TeamEvaluator, threat_table: bool = True) -> str:
     lead, switch, closer = r.ordered()
     esc = html.escape
     rows = []
@@ -40,10 +39,9 @@ def team_card(rank: int, r: Ranking, meta, evaluator: TeamEvaluator,
                 f'<td class="{_cell_class(rating)}">{rating:.0f}</td>'
                 for rating in (d["ratings"][m.species_id] for m in r.mons)
             )
-            badge = ("corebreaker" if d["answers"] == 0
-                     else "1 answer" if d["answers"] == 1 else "")
+            badge = "corebreaker" if d["answers"] == 0 else "1 answer" if d["answers"] == 1 else ""
             rows.append(
-                f'<tr><th>{esc(t.name)}</th>{cells}'
+                f"<tr><th>{esc(t.name)}</th>{cells}"
                 f'<td class="ans">{d["answers"]}/3</td><td class="flag">{badge}</td></tr>'
             )
     table = ""
@@ -51,14 +49,13 @@ def team_card(rank: int, r: Ranking, meta, evaluator: TeamEvaluator,
         header = "".join(f"<th>{esc(m.name)}</th>" for m in r.mons)
         table = (
             '<table class="scorecard"><thead><tr><th>meta threat</th>'
-            f'{header}<th>answers</th><th></th></tr></thead><tbody>'
-            + "".join(rows) + "</tbody></table>"
+            f"{header}<th>answers</th><th></th></tr></thead><tbody>" + "".join(rows) + "</tbody></table>"
         )
 
+    table = table.replace("\n", "\n  ")
     core = ", ".join(f"{esc(n)} ({v:.0f})" for n, v in r.corebreakers[:6]) or "none"
     single = ", ".join(f"{esc(n)} ({v:.0f})" for n, v in r.single_answer[:6]) or "none"
-    moves = " &middot; ".join(
-        f"<b>{esc(m.name)}</b> {esc(', '.join(m.move_names()))}" for m in r.mons)
+    moves = " &middot; ".join(f"<b>{esc(m.name)}</b> {esc(', '.join(m.move_names()))}" for m in r.mons)
 
     return f"""
 <section class="card">
@@ -83,18 +80,29 @@ def team_card(rank: int, r: Ranking, meta, evaluator: TeamEvaluator,
     <p><b>corebreakers</b> (nobody wins): {core}</p>
     <p><b>single answer</b>: {single}</p>
   </div>
-  {table}
+{table}
   <footer><a href="{meta.team_builder_link(r.mons)}" target="_blank" rel="noopener">open in PvPoke team builder &rarr;</a></footer>
 </section>"""
 
 
-def render(meta, results: Sequence[Ranking], evaluator: TeamEvaluator,
-           league: str, pool_names: Sequence[str], elo: int | None,
-           engine_info: str, greedy: Ranking | None = None) -> str:
+def render(
+    meta,
+    results: Sequence[Ranking],
+    evaluator: TeamEvaluator,
+    league: str,
+    pool_names: Sequence[str],
+    elo: int | None,
+    engine_info: str,
+    greedy: Ranking | None = None,
+) -> str:
     esc = html.escape
     generated = datetime.now().strftime("%Y-%m-%d %H:%M")
     cards = "\n".join(team_card(i, r, meta, evaluator) for i, r in enumerate(results, 1))
-    greedy_card = f'<h2>the post\'s manual loop, automated (step 1-3)</h2>{team_card(0, greedy, meta, evaluator, threat_table=False)}' if greedy else ""
+    greedy_card = (
+        f"<h2>the post's manual loop, automated (step 1-3)</h2>{team_card(0, greedy, meta, evaluator, threat_table=False)}"
+        if greedy
+        else ""
+    )
     pool = ", ".join(esc(n) for n in pool_names)
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
@@ -145,7 +153,7 @@ def render(meta, results: Sequence[Ranking], evaluator: TeamEvaluator,
 <body><div class="wrap">
 <h1>{esc(league.title())} League &middot; {esc(meta.cup)} cup (CP {meta.cp})</h1>
 <div class="meta">scorecard: top {len(evaluator.threats)} threats
-  {'&middot; elo ' + str(elo) if elo else ''} &middot; matchups: {esc(engine_info)} &middot; generated {generated}</div>
+  {"&middot; elo " + str(elo) if elo else ""} &middot; matchups: {esc(engine_info)} &middot; generated {generated}</div>
 <div class="pool">box: {pool}</div>
 {greedy_card}
 <h2>best teams from your box</h2>
