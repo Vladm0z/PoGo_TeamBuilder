@@ -21,9 +21,10 @@ Resolution order:
 
 1. `--data-dir` (per command, highest priority)
 2. `$PVP_TEAM_BUILDER_DATA`
-3. `<project>/data` when running from a checkout (checked by the presence of
-   `pyproject.toml`)
-4. `$XDG_CACHE_HOME/pvp-team-builder` or `~/.cache/pvp-team-builder`
+3. `$XDG_CACHE_HOME/pvp-team-builder`, else `~/.cache/pvp-team-builder`
+
+Nothing is written inside the checkout. That is deliberate: the cache is
+downloaded data and should never end up in a commit or in `git status`.
 
 ## Refresh rules
 

@@ -34,15 +34,15 @@ def default_data_dir() -> Path:
     """
     Where PvPoke's JSON is cached.
 
-    Order: $PVP_TEAM_BUILDER_DATA, then <project>/data when running from a
-    checkout, else the platform cache dir (~/.cache/pvp-team-builder).
+    Deliberately outside the working tree: the cache is downloaded data, roughly
+    30 MB, and should never be committed or show up in a checkout.
+
+    Order: $PVP_TEAM_BUILDER_DATA, then $XDG_CACHE_HOME/pvp-team-builder,
+    then ~/.cache/pvp-team-builder. `--data-dir` overrides all of it per command.
     """
     env = os.environ.get("PVP_TEAM_BUILDER_DATA")
     if env:
         return Path(env).expanduser()
-    project = HERE.parent.parent
-    if (project / "pyproject.toml").exists():
-        return project / "data"
     base = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache"))
     return base / "pvp-team-builder"
 
